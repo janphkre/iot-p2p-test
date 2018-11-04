@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">IoT-Wifi-p2p-Test</string>
+    <string name="app_name">IoT p2p Test</string>
+    <string name="test_wifi">Wifi Test</string>
+    <string name="test_bluetooth">Bluetooth Test</string>
 </resources>
