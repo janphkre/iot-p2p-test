@@ -38,6 +38,32 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>()
         }
     }
 
+    fun put(name: String, type: String, rssi: Int, scanRecord: String) {
+        val currentData = itemMap[name]
+        if(currentData != null) {
+            currentData.apply {
+                this.type = type
+                this.deviceStatus = rssi
+                this.txtRecordMap = mapOf(Pair("", scanRecord))
+            }
+            synchronized(itemMap) {
+                notifyItemChanged(currentData.position)
+            }
+        } else {
+            synchronized(itemMap) {
+                val position = itemMap.size
+                itemMap[name] = ServiceData(
+                    position,
+                    name,
+                    type,
+                    rssi,
+                    mapOf(Pair("", scanRecord))
+                )
+                notifyItemInserted(position)
+            }
+        }
+    }
+
     fun put(name: String, txtRecordMap: Map<String, String>, status: Int) {
         val currentData = itemMap[name]
         if(currentData != null) {

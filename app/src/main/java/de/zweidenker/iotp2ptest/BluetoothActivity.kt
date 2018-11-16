@@ -11,7 +11,7 @@ class BluetoothActivity: BaseBluetoothActivity(R.string.test_bluetooth) {
 
     private var bluetoothReceiver: BroadcastReceiver? = null
 
-    override fun onBluetoothManagerInstantiated() {
+    override fun onBluetoothAdapterInitiated() {
         bluetoothReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 when (intent.action) {

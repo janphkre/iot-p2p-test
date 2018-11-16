@@ -13,14 +13,14 @@ abstract class BaseBluetoothActivity(@StringRes private val titleRes: Int): Serv
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initiateBluetoothManagerWithPermissions()
+        initiateBluetoothAdapterWithPermissions()
     }
 
-    private fun initiateBluetoothManagerWithPermissions() {
-        withPermissions(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.ACCESS_COARSE_LOCATION, callback= ::initiateBluetoothManager)
+    private fun initiateBluetoothAdapterWithPermissions() {
+        withPermissions(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.ACCESS_COARSE_LOCATION, callback= ::initiateBluetoothAdapter)
     }
 
-    private fun initiateBluetoothManager() {
+    private fun initiateBluetoothAdapter() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter().apply {
             if(this == null) {
                 toast("Device does not support bluetooth!")
@@ -31,9 +31,10 @@ abstract class BaseBluetoothActivity(@StringRes private val titleRes: Int): Serv
                 enable()
             }
         }
+        onBluetoothAdapterInitiated()
     }
 
-    abstract fun onBluetoothManagerInstantiated()
+    abstract fun onBluetoothAdapterInitiated()
 
     override fun onDestroy() {
         if(!wasEnabled) {
@@ -45,13 +46,13 @@ abstract class BaseBluetoothActivity(@StringRes private val titleRes: Int): Serv
 
     override fun startAsDiscovery() {
         if(bluetoothAdapter == null) {
-            initiateBluetoothManagerWithPermissions()
+            initiateBluetoothAdapterWithPermissions()
         }
     }
 
     override fun startAsLocalService() {
         if(bluetoothAdapter == null) {
-            initiateBluetoothManagerWithPermissions()
+            initiateBluetoothAdapterWithPermissions()
         }
     }
 
