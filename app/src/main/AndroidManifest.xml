@@ -46,6 +46,7 @@
         </activity>
         <activity android:name="de.zweidenker.iotp2ptest.WifiActivity" />
         <activity android:name="de.zweidenker.iotp2ptest.BluetoothActivity" />
+        <activity android:name="de.zweidenker.iotp2ptest.BluetoothLEActivity" />
     </application>
 
 </manifest>

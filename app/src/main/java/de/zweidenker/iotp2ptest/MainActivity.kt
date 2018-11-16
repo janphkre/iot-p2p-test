@@ -19,5 +19,9 @@ class MainActivity : AppCompatActivity() {
         button_bluetooth.setOnClickListener {
             startActivity(Intent(this, BluetoothActivity::class.java))
         }
+
+        button_bluetooth_le.setOnClickListener {
+            startActivity(Intent(this, BluetoothLEActivity::class.java))
+        }
     }
 }
