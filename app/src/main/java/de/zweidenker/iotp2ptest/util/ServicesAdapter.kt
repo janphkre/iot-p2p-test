@@ -10,9 +10,9 @@ import android.widget.ListView
 import android.widget.TextView
 import de.zweidenker.iotp2ptest.R
 
-class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.WifiViewHolder>() {
+class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>() {
 
-    private val itemMap =  ArrayMap<String, WifiData>()
+    private val itemMap =  ArrayMap<String, ServiceData>()
 
     fun put(name: String, type: String, status: Int) {
         val currentData = itemMap[name]
@@ -27,7 +27,7 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.WifiViewHolder>() {
         } else {
             synchronized(itemMap) {
                 val position = itemMap.size
-                itemMap[name] = WifiData(
+                itemMap[name] = ServiceData(
                     position,
                     name,
                     type,
@@ -51,7 +51,7 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.WifiViewHolder>() {
         } else {
             synchronized(itemMap) {
                 val position = itemMap.size
-                itemMap[name] = WifiData(
+                itemMap[name] = ServiceData(
                     position,
                     name,
                     "",
@@ -70,30 +70,30 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.WifiViewHolder>() {
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WifiViewHolder {
-        return WifiViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceViewHolder {
+        return ServiceViewHolder(parent)
     }
 
     override fun getItemCount(): Int {
         return itemMap.size
     }
 
-    override fun onBindViewHolder(holder: WifiViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ServiceViewHolder, position: Int) {
         val item = synchronized(itemMap) {
             itemMap.valueAt(position)
         }
         holder.bindData(item)
     }
 
-    data class WifiData(val position: Int, val name: String, var type: String, var deviceStatus: Int, var txtRecordMap: Map<String, String>? = null)
+    data class ServiceData(val position: Int, val name: String, var type: String, var deviceStatus: Int, var txtRecordMap: Map<String, String>? = null)
 
-    class WifiViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_wifi, parent, false)) {
+    class ServiceViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_service, parent, false)) {
         private val nameView = itemView.findViewById<TextView>(R.id.text_name)
         private val typeView = itemView.findViewById<TextView>(R.id.text_type)
         private val deviceView = itemView.findViewById<TextView>(R.id.text_device)
         private val recordView = itemView.findViewById<ListView>(R.id.text_record)
 
-        fun bindData(data: WifiData) {
+        fun bindData(data: ServiceData) {
             nameView.text = data.name
             typeView.text = data.type
             deviceView.text = data.deviceStatus.toString()
