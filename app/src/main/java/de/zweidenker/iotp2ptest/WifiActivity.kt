@@ -8,8 +8,10 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Build
 import android.os.Bundle
 import android.os.HandlerThread
+import android.support.annotation.RequiresApi
 import de.zweidenker.iotp2ptest.util.ServicesActivity
 
+@RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 class WifiActivity: ServicesActivity(R.string.test_wifi) {
     companion object {
         private const val SERVICE_NAME = "TestService"

@@ -6,7 +6,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "de.zweidenker.iot_wifi_p2p_test"
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"

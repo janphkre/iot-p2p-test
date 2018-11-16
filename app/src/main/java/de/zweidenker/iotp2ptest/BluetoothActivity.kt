@@ -1,50 +1,17 @@
 package de.zweidenker.iotp2ptest
 
-import android.Manifest
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.os.Bundle
-import de.zweidenker.iotp2ptest.util.ServicesActivity
 
-class BluetoothActivity: ServicesActivity(R.string.test_bluetooth) {
-
-    private var bluetoothAdapter: BluetoothAdapter? = null
-    private var wasEnabled: Boolean = false
+class BluetoothActivity: BaseBluetoothActivity(R.string.test_bluetooth) {
 
     private var bluetoothReceiver: BroadcastReceiver? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initiateBluetoothManagerWithPermissions()
-    }
-
-    private fun initiateBluetoothManagerWithPermissions() {
-        withPermissions(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.ACCESS_COARSE_LOCATION, callback= ::initiateBluetoothManager)
-    }
-
-    private fun initiateBluetoothManager() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter().apply {
-            if(this == null) {
-                toast("Device does not support bluetooth!")
-                return
-            }
-            wasEnabled = isEnabled
-            if(!isEnabled) {
-                enable()
-            }
-
-            initiateBluetoothReceiver()
-            startDiscovery()
-        }
-    }
-
-
-    private fun initiateBluetoothReceiver() {
+    override fun onBluetoothManagerInstantiated() {
         bluetoothReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 when (intent.action) {
@@ -65,33 +32,14 @@ class BluetoothActivity: ServicesActivity(R.string.test_bluetooth) {
         }
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         registerReceiver(bluetoothReceiver, filter)
-
+        bluetoothAdapter?.startDiscovery()
     }
+
     override fun onDestroy() {
-        if(!wasEnabled) {
-            bluetoothAdapter?.disable()
-        }
         if(bluetoothReceiver != null) {
             unregisterReceiver(bluetoothReceiver)
         }
-        bluetoothAdapter = null
         bluetoothReceiver = null
         super.onDestroy()
-    }
-
-    override fun startAsDiscovery() {
-        if(bluetoothAdapter == null) {
-            initiateBluetoothManagerWithPermissions()
-        }
-    }
-
-    override fun startAsLocalService() {
-        if(bluetoothAdapter == null) {
-            initiateBluetoothManagerWithPermissions()
-        }
-    }
-
-    override fun clearEverything() {
-        serviceAdapter.clearList()
     }
 }
