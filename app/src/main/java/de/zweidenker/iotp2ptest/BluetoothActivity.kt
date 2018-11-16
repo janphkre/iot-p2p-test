@@ -37,11 +37,9 @@ class BluetoothActivity: ServicesActivity(R.string.test_bluetooth) {
             if(!isEnabled) {
                 enable()
             }
-            //TODO offloadedFiltering
 
             initiateBluetoothReceiver()
             startDiscovery()
-            //TODO!
         }
     }
 
@@ -70,7 +68,6 @@ class BluetoothActivity: ServicesActivity(R.string.test_bluetooth) {
 
     }
     override fun onDestroy() {
-        super.onDestroy()
         if(!wasEnabled) {
             bluetoothAdapter?.disable()
         }
@@ -79,14 +76,19 @@ class BluetoothActivity: ServicesActivity(R.string.test_bluetooth) {
         }
         bluetoothAdapter = null
         bluetoothReceiver = null
+        super.onDestroy()
     }
 
     override fun startAsDiscovery() {
-        TODO("not implemented")
+        if(bluetoothAdapter == null) {
+            initiateBluetoothManagerWithPermissions()
+        }
     }
 
     override fun startAsLocalService() {
-        TODO("not implemented")
+        if(bluetoothAdapter == null) {
+            initiateBluetoothManagerWithPermissions()
+        }
     }
 
     override fun clearEverything() {

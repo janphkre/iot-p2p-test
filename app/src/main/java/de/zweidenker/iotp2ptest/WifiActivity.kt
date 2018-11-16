@@ -47,7 +47,6 @@ class WifiActivity: ServicesActivity(R.string.test_wifi) {
     }
 
     override fun onDestroy() {
-        clearEverything()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             wifiChannel?.close()
         }
@@ -55,6 +54,7 @@ class WifiActivity: ServicesActivity(R.string.test_wifi) {
         wifiManager = null
         backgroundThread?.quit()
         backgroundThread = null
+        clearEverything()
         super.onDestroy()
     }
 
