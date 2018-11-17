@@ -10,7 +10,7 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 
 /**
- * This is a Activity to demo the behavior of Bluetooth Low Energy.
+ * This is an Activity to demo the behavior of Bluetooth Low Energy.
  * Bluetooth LE requires API level 18, some permissions and a bluetooth module in the phone.
  * See: https://developer.android.com/guide/topics/connectivity/bluetooth-le
  * The startLeScan and stopLeScan calls on the BluetoothAdapter have been deprecated in API 21 and replaced with android.bluetooth.le.BluetoothLeScanner

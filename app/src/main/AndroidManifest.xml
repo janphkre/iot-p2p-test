@@ -4,6 +4,8 @@
     package="de.zweidenker.iotp2ptest">
 
     <uses-feature android:name="android.hardware.wifi.direct" />
+    <uses-feature android:name="android.hardware.bluetooth_le" />
+    <uses-feature android:name="android.hardware.nfc" />
     <!--Required for Wifi P2P(?) and Bluetooth because of MAC-addresses.
         https://developer.android.com/training/connect-devices-wirelessly/nsd-wifi-direct
         claims the permission is not needed,
@@ -12,22 +14,15 @@
         https://developer.android.com/guide/topics/connectivity/bluetooth
         also claims that it is needed (for bluetooth).-->
 
-    <uses-permission
-        android:required="true"
-        android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission
-        android:required="true"
-        android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission
-        android:required="true"
-        android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission
-        android:required="true"
-        android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <uses-permission android:name="android.permission.NFC" />
 
     <application
             android:allowBackup="true"
@@ -47,6 +42,7 @@
         <activity android:name="de.zweidenker.iotp2ptest.WifiActivity" />
         <activity android:name="de.zweidenker.iotp2ptest.BluetoothActivity" />
         <activity android:name="de.zweidenker.iotp2ptest.BluetoothLEActivity" />
+        <activity android:name=".NFCActivity" />
     </application>
 
 </manifest>
