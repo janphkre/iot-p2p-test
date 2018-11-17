@@ -10,6 +10,8 @@ abstract class BaseBluetoothActivity(@StringRes private val titleRes: Int): Serv
     protected var bluetoothAdapter: BluetoothAdapter? = null
     private set
     private var wasEnabled: Boolean = false
+    protected var isDiscovery: Boolean = false
+    private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,32 +33,46 @@ abstract class BaseBluetoothActivity(@StringRes private val titleRes: Int): Serv
                 enable()
             }
         }
-        onBluetoothAdapterInitiated()
+        if(isDiscovery) {
+            onBluetoothAdapterStartDiscovery()
+        } else {
+            onBluetoothAdapterStartLocalService()
+        }
     }
 
-    abstract fun onBluetoothAdapterInitiated()
+    abstract fun onBluetoothAdapterStartDiscovery()
+    abstract fun onBluetoothAdapterStartLocalService()
+
 
     override fun onDestroy() {
-        if(!wasEnabled) {
-            bluetoothAdapter?.disable()
-        }
-        bluetoothAdapter = null
+        clearEverything()
         super.onDestroy()
     }
 
     override fun startAsDiscovery() {
+        isDiscovery = true
         if(bluetoothAdapter == null) {
             initiateBluetoothAdapterWithPermissions()
+        } else {
+            onBluetoothAdapterStartDiscovery()
         }
     }
 
     override fun startAsLocalService() {
+        isDiscovery = false
         if(bluetoothAdapter == null) {
             initiateBluetoothAdapterWithPermissions()
+        } else {
+            onBluetoothAdapterStartLocalService()
         }
     }
 
     override fun clearEverything() {
+        isDiscovery = false
+        if(!wasEnabled) {
+            bluetoothAdapter?.disable()
+        }
+        bluetoothAdapter = null
         serviceAdapter.clearList()
     }
 }
