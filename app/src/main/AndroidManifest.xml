@@ -32,17 +32,27 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="de.zweidenker.iotp2ptest.MainActivity">
+        <activity
+            android:name="de.zweidenker.iotp2ptest.MainActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="de.zweidenker.iotp2ptest.WifiActivity" />
-        <activity android:name="de.zweidenker.iotp2ptest.BluetoothActivity" />
-        <activity android:name="de.zweidenker.iotp2ptest.BluetoothLEActivity" />
-        <activity android:name=".NFCActivity" />
+        <activity
+            android:name="de.zweidenker.iotp2ptest.WifiActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="de.zweidenker.iotp2ptest.BluetoothActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="de.zweidenker.iotp2ptest.BluetoothLEActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="de.zweidenker.iotp2ptest.NFCActivity"
+            android:launchMode="singleInstance" />
     </application>
 
 </manifest>
