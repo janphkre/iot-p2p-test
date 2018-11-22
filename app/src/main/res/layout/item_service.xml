@@ -40,7 +40,7 @@
     <de.zweidenker.iotp2ptest.util.NoScrollListView
         android:id="@+id/text_record"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_device_description" />

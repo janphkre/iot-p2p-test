@@ -41,5 +41,13 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
+
+        button_nfc.setOnClickListener {
+            if(packageManager.hasSystemFeature(PackageManager.FEATURE_NFC)) {
+                startActivity(Intent(this, NFCActivity::class.java))
+            } else {
+                toast("This phone does not support NFC.")
+            }
+        }
     }
 }

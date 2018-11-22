@@ -140,7 +140,6 @@ class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.
             typeView.text = data.type
             deviceView.text = data.deviceStatus.toString()
             data.txtRecordMap?.apply {
-                this.entries
                 recordView.adapter = object: ArrayAdapter<Map.Entry<String, String>>(recordView.context, 0, this.entries.toList()) {
                     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                         val currentView = convertView ?: LayoutInflater.from(parent.context).inflate(R.layout.item_record, parent, false)
