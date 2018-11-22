@@ -7,14 +7,14 @@ Discovering Device | Local Service Device
 -- | --
 ![Wifi Direct Discovering](https://github.com/janphkre/iot-p2p-test/blob/master/results/wifi_direct_discovering.png) | ![Wifi Direct Local Service](https://github.com/janphkre/iot-p2p-test/blob/master/results/wifi_direct_local_service.png)
 # 2. Bluetooth
-Discovering Device |Local Service Device
+Discovering Device | Local Service Device
 -- | --
 ![Bluetooth Discovering](https://github.com/janphkre/iot-p2p-test/blob/master/results/bluetooth_discovering.png) | ![Bluetooth Local Service](https://github.com/janphkre/iot-p2p-test/blob/master/results/bluetooth_local_service.png)
 # 3. Bluetooth Low Energy
-Wifi Direct Discovering Device | Wifi Direct Local Service Device
+Discovering Device | Local Service Device
 -- | --
 ![Bluetooth LE Discovering](https://github.com/janphkre/iot-p2p-test/blob/master/results/bluetooth_le_discovering.png) | ![Bluetooth LE Local Service](https://github.com/janphkre/iot-p2p-test/blob/master/results/bluetooth_le_local_service.png)
 # 4. NFC
-Wifi Direct Discovering Device | Wifi Direct Local Service Device
+Discovering Device | Local Service Device
 -- | --
 ![NFC Discovering](https://github.com/janphkre/iot-p2p-test/blob/master/results/nfc_discovering.png) | ![NFC Local Service](https://github.com/janphkre/iot-p2p-test/blob/master/results/nfc_local_service.png)
