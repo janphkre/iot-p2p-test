@@ -11,7 +11,7 @@ abstract class ServicesActivity(@StringRes private val titleRes: Int): BaseActiv
     protected val serviceAdapter = ServicesAdapter(this)
 
     enum class RequestCode(val value: Int) {
-        PERMISSIONS(5001), ENABLE_BT(5002)
+        PERMISSIONS(5001), DISCOVERABLE_BT(5002)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

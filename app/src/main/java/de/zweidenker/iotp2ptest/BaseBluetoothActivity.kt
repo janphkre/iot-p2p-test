@@ -13,24 +13,22 @@ abstract class BaseBluetoothActivity(@StringRes private val titleRes: Int): Serv
     protected var isDiscovery: Boolean = false
     private set
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initiateBluetoothAdapterWithPermissions()
-    }
-
     private fun initiateBluetoothAdapterWithPermissions() {
         withPermissions(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.ACCESS_COARSE_LOCATION, callback= ::initiateBluetoothAdapter)
     }
 
     private fun initiateBluetoothAdapter() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter().apply {
-            if(this == null) {
-                toast("Device does not support bluetooth!")
-                return
-            }
-            wasEnabled = isEnabled
-            if(!isEnabled) {
-                enable()
+        if(bluetoothAdapter == null) {
+            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter().apply {
+                if (this == null) {
+                    toast("Device does not support bluetooth!")
+                    finish()
+                    return
+                }
+                wasEnabled = isEnabled
+                if (!isEnabled) {
+                    enable()
+                }
             }
         }
         if(isDiscovery) {

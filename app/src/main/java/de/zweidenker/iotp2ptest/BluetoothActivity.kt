@@ -1,5 +1,6 @@
 package de.zweidenker.iotp2ptest
 
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,6 +13,7 @@ class BluetoothActivity: BaseBluetoothActivity(R.string.test_bluetooth) {
     private var bluetoothReceiver: BroadcastReceiver? = null
 
     override fun onBluetoothAdapterStartDiscovery() {
+        bluetoothAdapter?.startDiscovery()
         if(bluetoothReceiver == null) {
             bluetoothReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
@@ -28,16 +30,29 @@ class BluetoothActivity: BaseBluetoothActivity(R.string.test_bluetooth) {
                             }
                             serviceAdapter.put(device.name, type, device.bondState)
                         }
+                        BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                            toast("Completed Discovery")
+                        }
+                        BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
+                            toast("Started Discovery")
+                        }
                     }
                 }
             }
-            val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+            val filter = IntentFilter(BluetoothDevice.ACTION_FOUND).apply {
+                addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+                addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
+            }
             registerReceiver(bluetoothReceiver, filter)
         }
         bluetoothAdapter?.startDiscovery()
     }
 
-    override fun onBluetoothAdapterStartLocalService() { }
+    override fun onBluetoothAdapterStartLocalService() {
+        val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+        intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 120)
+        startActivityForResult(intent, RequestCode.DISCOVERABLE_BT.value)
+    }
 
     override fun clearEverything() {
         if(bluetoothReceiver != null) {
