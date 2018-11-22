@@ -7,7 +7,6 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Build
 import android.os.Bundle
-import android.os.HandlerThread
 import android.support.annotation.RequiresApi
 import de.zweidenker.iotp2ptest.util.ServicesActivity
 
@@ -18,7 +17,6 @@ class WifiActivity: ServicesActivity(R.string.test_wifi) {
         private const val SERVICE_TYPE = "pharo_connectivity"
     }
 
-    private var backgroundThread: HandlerThread? = null
     private var wifiManager: WifiP2pManager? = null
     private var wifiChannel: WifiP2pManager.Channel? = null
 
@@ -37,15 +35,10 @@ class WifiActivity: ServicesActivity(R.string.test_wifi) {
         if(wifiManager == null) {
             toast("Failed to load WifiP2pManager")
         }
-        backgroundThread = HandlerThread("WifiHandlerThread").apply {
-            if (!isAlive) {
-                start()
-            }
-            wifiChannel = wifiManager?.initialize(this@WifiActivity, looper) {
+            wifiChannel = wifiManager?.initialize(this@WifiActivity, mainLooper) {
                 toast("Channel Disconnected!")
                 wifiManager = null
             }
-        }
     }
 
     override fun onDestroy() {
@@ -54,8 +47,6 @@ class WifiActivity: ServicesActivity(R.string.test_wifi) {
         }
         wifiChannel = null
         wifiManager = null
-        backgroundThread?.quit()
-        backgroundThread = null
         clearEverything()
         super.onDestroy()
     }
@@ -63,40 +54,54 @@ class WifiActivity: ServicesActivity(R.string.test_wifi) {
     override fun startAsLocalService() {
         if(wifiChannel == null) {
             initiateWifiManagerWithPermissions()
+            return
         }
-        val serviceInfo = WifiP2pDnsSdServiceInfo.newInstance(SERVICE_NAME, SERVICE_TYPE, mapOf(Pair("mac","00:00:00:00:00:00:00:00")))
+        val identifier = generateIdentifier()
+        val serviceInfo = WifiP2pDnsSdServiceInfo.newInstance(SERVICE_NAME, SERVICE_TYPE, mapOf(Pair("identifier",identifier)))
         wifiManager?.addLocalService(wifiChannel, serviceInfo, object: WifiP2pManager.ActionListener {
             override fun onSuccess() {
                 toast("Successfully created local service!")
                 serviceAdapter.put(SERVICE_NAME, SERVICE_TYPE, -1)
+                serviceAdapter.put(SERVICE_NAME, mapOf(Pair("identifier", identifier)), -1)
             }
 
             override fun onFailure(p0: Int) {
-                toast("Failed to create local service!")
+                toast("Failed to create local service! $p0")
             }
-
         })
+        startAsDiscovery()
     }
+
+
 
     override fun startAsDiscovery() {
         if(wifiChannel == null) {
             initiateWifiManagerWithPermissions()
+            return
         }
-        val request = WifiP2pDnsSdServiceRequest.newInstance(SERVICE_TYPE)
+        val request = WifiP2pDnsSdServiceRequest.newInstance()
+        wifiManager?.addServiceRequest(wifiChannel, request, object: WifiP2pManager.ActionListener {
+            override fun onSuccess() {
+                toast("Successfully created service request!", false)
+            }
+
+            override fun onFailure(p0: Int) {
+                toast("Failed to create service request! $p0")
+            }
+        })
         wifiManager?.setDnsSdResponseListeners(wifiChannel, { fullDomainName, type, wifiP2pDevice ->
             serviceAdapter.put(fullDomainName, type, wifiP2pDevice.status)
         }, { fullDomainName, txtRecordMap, wifiP2pDevice ->
             serviceAdapter.put(fullDomainName, txtRecordMap, wifiP2pDevice.status)
         })
-        wifiManager?.addServiceRequest(wifiChannel, request, object: WifiP2pManager.ActionListener {
+        wifiManager?.discoverServices(wifiChannel, object: WifiP2pManager.ActionListener {
             override fun onSuccess() {
-                toast("Successfully created service request!")
+                toast("Successfully initiated discovery of services!", false)
             }
 
             override fun onFailure(p0: Int) {
-                toast("Failed to create service request!")
+                toast("Failed to initiate discovery of services! $p0")
             }
-
         })
     }
 

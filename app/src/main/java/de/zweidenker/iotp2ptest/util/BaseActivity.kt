@@ -2,15 +2,23 @@ package de.zweidenker.iotp2ptest.util
 
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import permissions.dispatcher.PermissionUtils
+import java.util.*
+
 
 abstract class BaseActivity: AppCompatActivity() {
 
     private var permissionCallback: (() -> Unit)? = null
 
-    protected fun toast(string: String) {
-        Toast.makeText(this, string, Toast.LENGTH_LONG).show()
+    protected fun toast(string: String, showToUser: Boolean = true) {
+        Log.w("Toast", string)
+        if (showToUser) {
+            runOnUiThread {
+                Toast.makeText(this, string, Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     protected fun withVersion(versionCode: Int, callback: () -> Unit) {
@@ -45,5 +53,9 @@ abstract class BaseActivity: AppCompatActivity() {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
+    }
+
+    protected fun generateIdentifier(): String {
+        return UUID.randomUUID().toString()
     }
 }

@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_services.*
 
 abstract class ServicesActivity(@StringRes private val titleRes: Int): BaseActivity() {
 
-    protected val serviceAdapter = ServicesAdapter()
+    protected val serviceAdapter = ServicesAdapter(this)
 
     enum class RequestCode(val value: Int) {
         PERMISSIONS(5001), ENABLE_BT(5002)

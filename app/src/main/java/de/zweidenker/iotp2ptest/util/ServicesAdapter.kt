@@ -1,5 +1,6 @@
 package de.zweidenker.iotp2ptest.util
 
+import android.app.Activity
 import android.support.v4.util.ArrayMap
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -9,10 +10,16 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
 import de.zweidenker.iotp2ptest.R
+import java.lang.ref.WeakReference
 
-class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>() {
+class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>() {
 
+    private val attachedActivity: WeakReference<Activity> = WeakReference(activity)
     private val itemMap =  ArrayMap<String, ServiceData>()
+
+    private fun runOnUiThread(action: () -> Unit) {
+        attachedActivity.get()?.runOnUiThread(action)
+    }
 
     fun put(name: String, type: String, status: Int) {
         val currentData = itemMap[name]
@@ -21,7 +28,7 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>()
                 this.type = type
                 this.deviceStatus = status
             }
-            synchronized(itemMap) {
+            runOnUiThread {
                 notifyItemChanged(currentData.position)
             }
         } else {
@@ -33,8 +40,11 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>()
                     type,
                     status
                 )
-                notifyItemInserted(position)
+                runOnUiThread {
+                    notifyItemInserted(position)
+                }
             }
+
         }
     }
 
@@ -46,7 +56,7 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>()
                 this.deviceStatus = rssi
                 this.txtRecordMap = mapOf(Pair("", scanRecord))
             }
-            synchronized(itemMap) {
+            runOnUiThread {
                 notifyItemChanged(currentData.position)
             }
         } else {
@@ -59,8 +69,11 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>()
                     rssi,
                     mapOf(Pair("", scanRecord))
                 )
-                notifyItemInserted(position)
+                runOnUiThread {
+                    notifyItemInserted(position)
+                }
             }
+
         }
     }
 
@@ -71,7 +84,7 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>()
                 this.deviceStatus = status
                 this.txtRecordMap = txtRecordMap
             }
-            synchronized(itemMap) {
+            runOnUiThread {
                 notifyItemChanged(currentData.position)
             }
         } else {
@@ -84,15 +97,20 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>()
                     status,
                     txtRecordMap
                 )
-                notifyItemInserted(position)
+                runOnUiThread {
+                    notifyItemInserted(position)
+                }
             }
+
         }
     }
 
     fun clearList() {
         synchronized(itemMap) {
             itemMap.clear()
-            notifyDataSetChanged()
+            runOnUiThread {
+                notifyDataSetChanged()
+            }
         }
     }
 
@@ -105,9 +123,7 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>()
     }
 
     override fun onBindViewHolder(holder: ServiceViewHolder, position: Int) {
-        val item = synchronized(itemMap) {
-            itemMap.valueAt(position)
-        }
+        val item = itemMap.valueAt(position)
         holder.bindData(item)
     }
 
@@ -129,7 +145,7 @@ class ServicesAdapter: RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>()
                     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                         val currentView = convertView ?: LayoutInflater.from(parent.context).inflate(R.layout.item_record, parent, false)
                         val item = getItem(position)
-                        (currentView as TextView).text = "${item.key} = ${item.value}"
+                        (currentView as TextView).text = "${item?.key} = ${item?.value}"
                         return currentView
                     }
                 }
