@@ -65,7 +65,7 @@ class NFCActivity: ServicesActivity(R.string.test_nfc) {
         nfcAdapter?.setOnNdefPushCompleteCallback(NfcAdapter.OnNdefPushCompleteCallback {
             toast("Successfully pushed message over nfc!")
         }, this)
-        serviceAdapter.put("de.zweidenker.iotp2ptest", mapOf(Pair("0", uuid.toString())),NdefRecord.TNF_UNKNOWN.toInt())
+        serviceAdapter.put("de.zweidenker.iotp2ptest", mapOf(Pair("0", uuid.toString())),NdefRecord.TNF_UNKNOWN.toInt(), "")
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -80,7 +80,7 @@ class NFCActivity: ServicesActivity(R.string.test_nfc) {
                     recordMap[(index++).toString()] = String(payload)
                 }
             }
-            serviceAdapter.put("de.zweidenker.iotp2ptest", recordMap, NdefRecord.TNF_UNKNOWN.toInt())
+            serviceAdapter.put("de.zweidenker.iotp2ptest", recordMap, NdefRecord.TNF_UNKNOWN.toInt(), "")
         }
     }
 

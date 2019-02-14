@@ -95,7 +95,7 @@ class BluetoothLEActivity: BaseBluetoothActivity(R.string.test_bluetooth_le) {
         @SuppressLint("HardwareIds")
         override fun onStartSuccess(settingsInEffect: AdvertiseSettings) {
             toast("Successfully created advertising!")
-            serviceAdapter.put(bluetoothAdapter?.name ?: bluetoothAdapter?.address ?: "", "", settingsInEffect.txPowerLevel)
+            serviceAdapter.put(bluetoothAdapter?.name ?: bluetoothAdapter?.address ?: "", "", settingsInEffect.txPowerLevel, bluetoothAdapter?.address ?: "")
         }
     }
 }

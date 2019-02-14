@@ -16,12 +16,17 @@ class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.
 
     private val attachedActivity: WeakReference<Activity> = WeakReference(activity)
     private val itemMap =  ArrayMap<String, ServiceData>()
+    private var itemClickListener: ((ServiceData) -> Unit)? = null
 
     private fun runOnUiThread(action: () -> Unit) {
         attachedActivity.get()?.runOnUiThread(action)
     }
 
-    fun put(name: String, type: String, status: Int) {
+    fun setOnItemClickListener(listener: ((ServiceData) -> Unit)?) {
+        itemClickListener = listener
+    }
+
+    fun put(name: String, type: String, status: Int, address: String) {
         val currentData = itemMap[name]
         if(currentData != null) {
             currentData.apply {
@@ -38,7 +43,8 @@ class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.
                     position,
                     name,
                     type,
-                    status
+                    status,
+                    address
                 )
                 runOnUiThread {
                     notifyItemInserted(position)
@@ -48,7 +54,7 @@ class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.
         }
     }
 
-    fun put(name: String, type: String, rssi: Int, scanRecord: String) {
+    fun put(name: String, type: String, rssi: Int, scanRecord: String, address: String) {
         val currentData = itemMap[name]
         if(currentData != null) {
             currentData.apply {
@@ -67,6 +73,7 @@ class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.
                     name,
                     type,
                     rssi,
+                    address,
                     mapOf(Pair("", scanRecord))
                 )
                 runOnUiThread {
@@ -77,7 +84,7 @@ class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.
         }
     }
 
-    fun put(name: String, txtRecordMap: Map<String, String>, status: Int) {
+    fun put(name: String, txtRecordMap: Map<String, String>, status: Int, address: String) {
         val currentData = itemMap[name]
         if(currentData != null) {
             currentData.apply {
@@ -95,6 +102,7 @@ class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.
                     name,
                     "",
                     status,
+                    address,
                     txtRecordMap
                 )
                 runOnUiThread {
@@ -124,10 +132,13 @@ class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.
 
     override fun onBindViewHolder(holder: ServiceViewHolder, position: Int) {
         val item = itemMap.valueAt(position)
-        holder.bindData(item)
+        holder.bindData(item, itemClickListener)
     }
 
-    data class ServiceData(val position: Int, val name: String, var type: String, var deviceStatus: Int, var txtRecordMap: Map<String, String>? = null)
+    override fun onViewRecycled(holder: ServiceViewHolder) {
+        holder.recycle()
+        super.onViewRecycled(holder)
+    }
 
     class ServiceViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_service, parent, false)) {
         private val nameView = itemView.findViewById<TextView>(R.id.text_name)
@@ -135,7 +146,7 @@ class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.
         private val deviceView = itemView.findViewById<TextView>(R.id.text_device)
         private val recordView = itemView.findViewById<ListView>(R.id.text_record)
 
-        fun bindData(data: ServiceData) {
+        fun bindData(data: ServiceData, itemClickListener: ((ServiceData) -> Unit)?) {
             nameView.text = data.name
             typeView.text = data.type
             deviceView.text = data.deviceStatus.toString()
@@ -149,6 +160,15 @@ class ServicesAdapter(activity: Activity): RecyclerView.Adapter<ServicesAdapter.
                     }
                 }
             }
+            if(itemClickListener != null) {
+                itemView.setOnClickListener {
+                    itemClickListener.invoke(data)
+                }
+            }
+        }
+
+        fun recycle() {
+            itemView.setOnClickListener(null)
         }
     }
 }

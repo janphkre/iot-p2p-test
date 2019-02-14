@@ -28,7 +28,7 @@ class BluetoothActivity: BaseBluetoothActivity(R.string.test_bluetooth) {
                             } else {
                                 "SDK-VER"
                             }
-                            serviceAdapter.put(device.name, type, device.bondState)
+                            serviceAdapter.put(device.name, type, device.bondState, device.address)
                         }
                         BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
                             toast("Completed Discovery")
